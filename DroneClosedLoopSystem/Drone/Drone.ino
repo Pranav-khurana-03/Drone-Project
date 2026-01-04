@@ -34,7 +34,7 @@ float prevITermRoll = 0, prevITermPitch = 0, prevITermYaw = 0;
 float rollKStatic = 0; // 1000 to 2000
 float pitchKStatic = 0;
 float PRateRoll = 0.46; // 0.34
-float PRatePitch = -1.2;
+float PRatePitch = -0.4;
 float PRateYaw = 0.005;
 
 float IRateRoll = 0;  // 1.16
@@ -69,11 +69,6 @@ void getReceiverInput() {
 }
 
 float getPIDEffort(float error, float P, float I, float D, float *prevError, float *prevITerm) {
-  // if (abs(error) < 3) {
-  //   *prevITerm = 0;
-  //   *prevError = 0;
-  //   return 0;
-  // }
   float pEffort = P * (error);
   float iEffort = *prevITerm + I * (error + *prevError) * 0.004 / 2;
   if (iEffort > 400) iEffort = 400;
@@ -102,6 +97,12 @@ void kalman(float kalmanState, float kalmanUncertainty, float kalmanInput, float
   kalmanOutput[0] = kalmanState;
   kalmanOutput[1] = kalmanUncertainty;
 }
+
+
+
+
+
+
 
 void gyroSignals() {
   Wire.beginTransmission(0x68);
@@ -256,6 +257,7 @@ void loop() {
   errorRateRoll = desiredRateRoll - rollRate;
   errorRatePitch = pitchRate - desiredRatePitch;
   errorRateYaw = desiredRateYaw - yawRate;
+
   roll = getPIDEffort(errorRateRoll, PRateRoll, IRateRoll, DRateRoll, &prevErrorRateRoll, &prevITermRoll) + rollKStatic;
   pitch = getPIDEffort(errorRatePitch, PRatePitch, IRatePitch, DRatePitch, &prevErrorRatePitch, &prevITermPitch);
   yaw = getPIDEffort(errorRateYaw, PRateYaw, IRateYaw, DRateYaw, &prevErrorRateYaw, &prevITermYaw);
@@ -314,18 +316,18 @@ void loop() {
   // Serial.print(",PitchEffort:");
   // Serial.println(pitch);
 
-  if (micros() - printTimer > 400000) {
+  if (micros() - printTimer > 100000) {
     // Serial.print("Pitch Error ");
     // Serial.print(errorRatePitch);
     // Serial.print("  Roll Error ");
     // Serial.println(errorRateRoll);
     // Serial.print(pitch); Serial.print("  "); Serial.println(roll);
-    Serial.print(frontLeftPower);
-    Serial.print("         ");
-    Serial.println(frontRightPower);
-    Serial.print(backLeftPower);
-    Serial.print("         ");
-    Serial.println(backRightPower);
+    // Serial.print(frontLeftPower);
+    // Serial.print("         ");
+    // Serial.println(frontRightPower);
+    // Serial.print(backLeftPower);
+    // Serial.print("         ");
+    // Serial.println(backRightPower);
     // // Serial.println(roll);
     // Serial.print(rollAngle); Serial.print(" ");
     // Serial.println(rollAngleCalibrationValue);
@@ -351,6 +353,13 @@ void loop() {
     // Serial.print(" ");
     // Serial.print(receiverValues[3]);
     // Serial.println(" ");
+
+    Serial.print(rollAngle); Serial.print(" ");
+    
+    Serial.print(rollRate); Serial.print(" ");
+
+    
+    Serial.println(kalmanAngleRoll);
 
     printTimer = micros();
   }

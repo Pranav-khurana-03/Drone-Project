@@ -97,6 +97,9 @@ void loop() {
   
   
   
+
+
+  
   int maxPower = findMax(frontRightPower, frontLeftPower, backRightPower, backLeftPower);
   int minPower = findMin(frontRightPower, frontLeftPower, backRightPower, backLeftPower);
   simpleScale(&frontRightPower, &frontLeftPower, &backRightPower, &backLeftPower, 0, 180);
