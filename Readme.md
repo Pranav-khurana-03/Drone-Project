@@ -2,6 +2,8 @@
 
 Arduino-based flight controller firmware for a self-built quadcopter. Reads inertial data from an MPU6050, fuses it with a Kalman filter for stable angle estimates, and runs a cascaded (angle → rate) PID controller to keep the aircraft level, with pilot commands coming in over a PPM RC receiver.
 
+**Demo video:** [Live flight demonstration and explanation](https://www.youtube.com/watch?v=yZt6ehGUBP8)
+
 ## Hardware
 
 - **Flight controller:** Arduino (any board with `Wire`, `Servo`, and an external interrupt pin)
